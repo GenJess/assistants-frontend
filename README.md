@@ -55,6 +55,10 @@ The main logic for chat will be found in the `Chat` component in `app/components
 - File Search Example: [http://localhost:3000/examples/file-search](http://localhost:3000/examples/file-search)
 - Full-featured Example: [http://localhost:3000/examples/all](http://localhost:3000/examples/all)
 
+### Utilities
+
+- `app/utils/crypto.ts` - helpers for fetching historical cryptocurrency prices from the CoinGecko API and comparing them with trade history
+
 ### Main Components
 
 - `app/components/chat.tsx` - handles chat rendering, [streaming](https://platform.openai.com/docs/assistants/overview?context=with-streaming), and [function call](https://platform.openai.com/docs/assistants/tools/function-calling/quickstart?context=streaming&lang=node.js) forwarding
