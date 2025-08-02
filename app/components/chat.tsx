@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import styles from "./chat.module.css";
 import { AssistantStream } from "openai/lib/AssistantStream";
 import Markdown from "react-markdown";
 // @ts-expect-error - no types for this yet
 import { AssistantStreamEvent } from "openai/resources/beta/assistants/assistants";
 import { RequiredActionFunctionToolCall } from "openai/resources/beta/threads/runs/runs";
+import { Button } from "@/components/ui/button";
 
 type MessageProps = {
   role: "user" | "assistant" | "code";
@@ -14,12 +14,16 @@ type MessageProps = {
 };
 
 const UserMessage = ({ text }: { text: string }) => {
-  return <div className={styles.userMessage}>{text}</div>;
+  return (
+    <div className="self-end rounded-lg bg-gray-900 px-4 py-2 text-white">
+      {text}
+    </div>
+  );
 };
 
 const AssistantMessage = ({ text }: { text: string }) => {
   return (
-    <div className={styles.assistantMessage}>
+    <div className="self-start rounded-lg bg-gray-100 px-4 py-2">
       <Markdown>{text}</Markdown>
     </div>
   );
@@ -27,7 +31,7 @@ const AssistantMessage = ({ text }: { text: string }) => {
 
 const CodeMessage = ({ text }: { text: string }) => {
   return (
-    <div className={styles.codeMessage}>
+    <div className="self-start whitespace-pre-wrap rounded-lg bg-gray-100 px-4 py-2 font-mono text-sm">
       {text.split("\n").map((line, index) => (
         <div key={index}>
           <span>{`${index + 1}. `}</span>
@@ -249,31 +253,24 @@ const Chat = ({
   }
 
   return (
-    <div className={styles.chatContainer}>
-      <div className={styles.messages}>
+    <div className="flex h-full flex-col">
+      <div className="flex-1 space-y-4 overflow-y-auto p-4">
         {messages.map((msg, index) => (
           <Message key={index} role={msg.role} text={msg.text} />
         ))}
         <div ref={messagesEndRef} />
       </div>
-      <form
-        onSubmit={handleSubmit}
-        className={`${styles.inputForm} ${styles.clearfix}`}
-      >
+      <form onSubmit={handleSubmit} className="flex gap-2 border-t p-4">
         <input
           type="text"
-          className={styles.input}
+          className="flex-1 rounded-md border px-3 py-2"
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Enter your question"
         />
-        <button
-          type="submit"
-          className={styles.button}
-          disabled={inputDisabled}
-        >
+        <Button type="submit" disabled={inputDisabled}>
           Send
-        </button>
+        </Button>
       </form>
     </div>
   );

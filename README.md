@@ -46,14 +46,19 @@ You can deploy this project to Vercel or any other platform that supports Next.j
 
 This project is intended to serve as a template for using the Assistants API in Next.js with [streaming](https://platform.openai.com/docs/assistants/overview/step-4-create-a-run), tool use ([code interpreter](https://platform.openai.com/docs/assistants/tools/code-interpreter) and [file search](https://platform.openai.com/docs/assistants/tools/file-search)), and [function calling](https://platform.openai.com/docs/assistants/tools/function-calling). While there are multiple pages to demonstrate each of these capabilities, they all use the same underlying assistant with all capabilities enabled.
 
-The main logic for chat will be found in the `Chat` component in `app/components/chat.tsx`, and the handlers starting with `api/assistants/threads` (found in `api/assistants/threads/...`). Feel free to start your own project and copy some of this logic in! The `Chat` component itself can be copied and used directly, provided you copy the styling from `app/components/chat.module.css` as well.
+The main logic for chat will be found in the `Chat` component in `app/components/chat.tsx`, and the handlers starting with `api/assistants/threads` (found in `api/assistants/threads/...`). Feel free to start your own project and copy some of this logic in! The `Chat` component is built with Tailwind CSS and [shadcn/ui](https://ui.shadcn.com/) primitives for a mobile-first experience.
 
 ### Pages
 
 - Basic Chat Example: [http://localhost:3000/examples/basic-chat](http://localhost:3000/examples/basic-chat)
 - Function Calling Example: [http://localhost:3000/examples/function-calling](http://localhost:3000/examples/function-calling)
+- Crypto Example: [http://localhost:3000/examples/crypto](http://localhost:3000/examples/crypto)
 - File Search Example: [http://localhost:3000/examples/file-search](http://localhost:3000/examples/file-search)
 - Full-featured Example: [http://localhost:3000/examples/all](http://localhost:3000/examples/all)
+
+### Utilities
+
+- `app/utils/crypto.ts` - helpers for fetching historical cryptocurrency prices from the CoinGecko API and comparing them with trade history
 
 ### Main Components
 
