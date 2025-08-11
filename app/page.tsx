@@ -5,10 +5,11 @@ import styles from "./page.module.css";
 
 const Home = () => {
   const categories = {
-    "Basic chat": "basic-chat",
-    "Function calling": "function-calling",
-    "File search": "file-search",
-    All: "all",
+    "Basic chat": "/examples/basic-chat",
+    "Function calling": "/examples/function-calling",
+    "File search": "/examples/file-search",
+    All: "/examples/all",
+    "Aevo Copy Trader": "/aevo-copy-trader",
   };
 
   return (
@@ -18,7 +19,7 @@ const Home = () => {
       </div>
       <div className={styles.container}>
         {Object.entries(categories).map(([name, url]) => (
-          <a key={name} className={styles.category} href={`/examples/${url}`}>
+          <a key={name} className={styles.category} href={url}>
             {name}
           </a>
         ))}
