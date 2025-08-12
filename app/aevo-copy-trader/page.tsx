@@ -1,58 +1,42 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import styles from "./page.module.css";
 
-interface Trade {
-  account?: string;
-  user?: string;
-  symbol?: string;
-  asset?: string;
-  side?: string;
-  direction?: string;
-  size?: number;
-  amount?: number;
-  price?: number;
-  execution_price?: number;
-  timestamp?: string;
-  executed_at?: string;
-}
+type Trade = {
+  trade_id: string;
+  address: string;
+  asset: string;
+  amount: string;
+  entry_price: string;
+  exit_price: string;
+  pnl: number;
+  is_long: boolean;
+};
 
-export default function AevoCopyTraderPage() {
+const formatAddress = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
+
+const AevoCopyTraderPage = () => {
   const [trades, setTrades] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  const mockTrades: Trade[] = [
-    {
-      account: "0x1234...abcd",
-      symbol: "BTC",
-      side: "buy",
-      price: 50000,
-      size: 1,
-    },
-  ];
 
   useEffect(() => {
     const fetchTrades = async () => {
       try {
         setLoading(true);
         const res = await fetch("/api/aevo-copy-trader");
-        console.log("API Response Status:", res.status);
-        const data = await res.json();
-        console.log("API Response Data:", data);
         if (!res.ok) {
-          setError(`API Error: ${res.status}`);
+          setError(`API error: ${res.status}`);
+          setTrades([]);
           return;
         }
-        const list = data.trades || data.items || data.data || [];
-        console.log("Parsed trades:", list);
+        const data = await res.json();
+        const list: Trade[] = data.trades ?? [];
         setTrades(list);
         setError(null);
-      } catch (err) {
-        console.error("Fetch error:", err);
+      } catch {
         setError("Failed to fetch trades");
-        setTrades(mockTrades);
+        setTrades([]);
       } finally {
         setLoading(false);
       }
@@ -63,28 +47,61 @@ export default function AevoCopyTraderPage() {
     return () => clearInterval(id);
   }, []);
 
+  if (loading) {
+    return (
+      <main className="mx-auto max-w-2xl p-4">
+        <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
+        <p className="text-sm text-gray-500">Loading trades...</p>
+      </main>
+    );
+  }
+
+  if (error) {
+    return (
+      <main className="mx-auto max-w-2xl p-4">
+        <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
+        <p className="text-sm text-red-600">Error: {error}</p>
+      </main>
+    );
+  }
+
+  if (!trades.length) {
+    return (
+      <main className="mx-auto max-w-2xl p-4">
+        <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
+        <p className="text-sm text-gray-500">No trades available</p>
+      </main>
+    );
+  }
+
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>Aevo Copy Trader Feed</h1>
-      {loading && <p className={styles.message}>Loading trades...</p>}
-      {error && <p className={styles.error}>Error: {error}</p>}
-      {!loading && !error && trades.length === 0 && (
-        <p className={styles.message}>No trades available</p>
-      )}
-      {!loading && !error && trades.length > 0 && (
-        <ul className={styles.list}>
-          {trades.map((t, i) => (
-            <li key={i} className={styles.item}>
-              <span className={styles.account}>{t.account || t.user}</span>
-              <span className={styles.action}>
-                {t.side || t.direction} {t.symbol || t.asset}
+    <main className="mx-auto max-w-2xl p-4">
+      <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
+      <ul className="divide-y divide-gray-200">
+        {trades.map((t) => (
+          <li
+            key={t.trade_id}
+            className="flex flex-col gap-1 py-3 sm:flex-row sm:items-center sm:justify-between"
+          >
+            <span className="break-all text-xs text-gray-500">
+              {formatAddress(t.address)}
+            </span>
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+              <span className="font-medium">
+                {t.is_long ? "Long" : "Short"} {t.asset}
               </span>
-              <span className={styles.price}>@ {t.price || t.execution_price}</span>
-              <span className={styles.size}>size {t.size || t.amount}</span>
-            </li>
-          ))}
-        </ul>
-      )}
+              <span className="text-gray-500">@ {t.exit_price}</span>
+              <span className="text-gray-500">size {t.amount}</span>
+              <span className={t.pnl >= 0 ? "text-green-600" : "text-red-600"}>
+                pnl {t.pnl.toFixed(4)}
+              </span>
+            </div>
+          </li>
+        ))}
+      </ul>
     </main>
   );
-}
+};
+
+export default AevoCopyTraderPage;
+
