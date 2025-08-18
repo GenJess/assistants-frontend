@@ -1,60 +1,93 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import ProjectCard from "./components/project-card";
 
-type Item = {
+export type Project = {
   title: string;
   href: string;
+  tags: string[];
+  status: string;
+  updatedAt: string;
+  dataHref?: string;
 };
 
-const staticItems: Item[] = [
-  { title: "Basic chat", href: "/examples/basic-chat" },
-  { title: "Function calling", href: "/examples/function-calling" },
-  { title: "File search", href: "/examples/file-search" },
-  { title: "All", href: "/examples/all" },
-  { title: "Aevo Copy Trader", href: "/aevo-copy-trader" },
+const projects: Project[] = [
+  {
+    title: "Basic chat",
+    href: "/examples/basic-chat",
+    tags: ["chat", "example"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
+  {
+    title: "Function calling",
+    href: "/examples/function-calling",
+    tags: ["api", "example"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
+  {
+    title: "File search",
+    href: "/examples/file-search",
+    tags: ["files", "example"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
+  {
+    title: "All",
+    href: "/examples/all",
+    tags: ["example"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
+  {
+    title: "Aevo Copy Trader",
+    href: "/aevo-copy-trader",
+    tags: ["trading", "script"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
 ];
+
+const allTags = ["All", ...Array.from(new Set(projects.flatMap((p) => p.tags)))];
 
 const Home = () => {
   const [query, setQuery] = useState("");
-  const [blobs, setBlobs] = useState<Item[]>([]);
+  const [tag, setTag] = useState("All");
 
-  useEffect(() => {
-    const fetchBlobs = async () => {
-      try {
-        const res = await fetch("/api/blob/list");
-        if (!res.ok) return;
-        const data = await res.json();
-        const items: Item[] = (data.blobs || []).map((b: any) => ({
-          title: b.pathname,
-          href: `https://i13543ak1qmumggz.public.blob.vercel-storage.com/${b.pathname}`,
-        }));
-        setBlobs(items);
-      } catch {
-        // ignore
-      }
-    };
-    fetchBlobs();
-  }, []);
-
-  const items = [...staticItems, ...blobs].filter((i) =>
-    i.title.toLowerCase().includes(query.toLowerCase())
-  );
+  const filtered = projects.filter((p) => {
+    const matchesQuery = p.title.toLowerCase().includes(query.toLowerCase());
+    const matchesTag = tag === "All" || p.tags.includes(tag);
+    return matchesQuery && matchesTag;
+  });
 
   return (
-    <main className="mx-auto max-w-5xl p-4">
+    <main className="mx-auto max-w-6xl p-4">
       <h1 className="mb-6 text-center text-3xl font-bold">Project Dashboard</h1>
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search projects..."
-        className="mb-6 w-full rounded border px-3 py-2"
-      />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search projects..."
+          className="w-full rounded border px-3 py-2"
+        />
+        <select
+          value={tag}
+          onChange={(e) => setTag(e.target.value)}
+          className="rounded border px-3 py-2"
+        >
+          {allTags.map((t) => (
+            <option key={t} value={t}>
+              {t}
+            </option>
+          ))}
+        </select>
+      </div>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {items.map((item) => (
-          <ProjectCard key={item.title} title={item.title} href={item.href} />
+        {filtered.map((item) => (
+          <ProjectCard key={item.title} {...item} />
         ))}
       </div>
     </main>

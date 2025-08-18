@@ -26,16 +26,20 @@ const AevoCopyTraderPage = () => {
       try {
         setLoading(true);
         const res = await fetch("/api/aevo-copy-trader");
+        console.log("API Response Status:", res.status);
+        const data = await res.json();
+        console.log("API Response Data:", data);
         if (!res.ok) {
           setError(`API error: ${res.status}`);
           setTrades([]);
           return;
         }
-        const data = await res.json();
         const list: Trade[] = data.trades ?? [];
+        console.log("Parsed trades:", list);
         setTrades(list);
         setError(null);
-      } catch {
+      } catch (err) {
+        console.error("Fetch error:", err);
         setError("Failed to fetch trades");
         setTrades([]);
       } finally {
