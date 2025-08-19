@@ -11,6 +11,7 @@ type Trade = {
   exit_price: string;
   pnl: number;
   is_long: boolean;
+  exit_created_timestamp: number;
 };
 
 const formatAddress = (addr: string) => `${addr.slice(0, 6)}…${addr.slice(-4)}`;
@@ -20,12 +21,16 @@ const AevoCopyTraderPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snapshots, setSnapshots] = useState<string[]>([]);
+  const [save, setSave] = useState<boolean>(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("aevo-save") !== "0";
+  });
 
   useEffect(() => {
     const fetchTrades = async () => {
       try {
         setLoading(true);
-        const res = await fetch("/api/aevo-copy-trader");
+        const res = await fetch(`/api/aevo-copy-trader?save=${save ? "1" : "0"}`);
         console.log("API Response Status:", res.status);
         const data = await res.json();
         console.log("API Response Data:", data);
@@ -50,7 +55,7 @@ const AevoCopyTraderPage = () => {
     fetchTrades();
     const id = setInterval(fetchTrades, 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [save]);
 
   useEffect(() => {
     const fetchSnapshots = async () => {
@@ -100,22 +105,75 @@ const AevoCopyTraderPage = () => {
   return (
     <main className="mx-auto max-w-3xl p-4">
       <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
-      <div className="grid gap-4 sm:grid-cols-2">
+      <label className="mb-4 flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          checked={save}
+          onChange={(e) => {
+            const val = e.target.checked;
+            setSave(val);
+            if (typeof window !== "undefined") {
+              localStorage.setItem("aevo-save", val ? "1" : "0");
+            }
+          }}
+        />
+        Save hourly snapshot
+      </label>
+      <div className="hidden sm:block overflow-x-auto">
+        <table className="min-w-full border text-sm">
+          <thead className="sticky top-0 bg-white">
+            <tr>
+              <th className="border px-2 py-1 text-left">Time</th>
+              <th className="border px-2 py-1 text-left">Asset</th>
+              <th className="border px-2 py-1 text-left">Side</th>
+              <th className="border px-2 py-1 text-right">Price</th>
+              <th className="border px-2 py-1 text-right">Size</th>
+              <th className="border px-2 py-1 text-right">PnL</th>
+              <th className="border px-2 py-1 text-left">Address</th>
+            </tr>
+          </thead>
+          <tbody>
+            {trades.map((t) => (
+              <tr key={t.trade_id} className="odd:bg-gray-50">
+                <td className="border px-2 py-1">
+                  {new Date(t.exit_created_timestamp / 1_000_000).toLocaleTimeString()}
+                </td>
+                <td className="border px-2 py-1">{t.asset}</td>
+                <td className="border px-2 py-1">{t.is_long ? "Long" : "Short"}</td>
+                <td className="border px-2 py-1 text-right">{t.exit_price}</td>
+                <td className="border px-2 py-1 text-right">{t.amount}</td>
+                <td
+                  className={`border px-2 py-1 text-right ${
+                    t.pnl >= 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {t.pnl.toFixed(4)}
+                </td>
+                <td className="border px-2 py-1 break-all">
+                  {formatAddress(t.address)}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="sm:hidden">
         {trades.map((t) => (
-          <div key={t.trade_id} className="rounded border p-4">
-            <div className="mb-2 flex items-center justify-between text-xs text-gray-500">
-              <span className="break-all">{formatAddress(t.address)}</span>
+          <details key={t.trade_id} className="mb-2 rounded border p-2">
+            <summary className="flex justify-between text-sm">
+              <span>{t.asset}</span>
               <span>{t.is_long ? "Long" : "Short"}</span>
+            </summary>
+            <div className="mt-2 text-xs">
+              <div>Time: {new Date(t.exit_created_timestamp / 1_000_000).toLocaleTimeString()}</div>
+              <div>Price: {t.exit_price}</div>
+              <div>Size: {t.amount}</div>
+              <div className={t.pnl >= 0 ? "text-green-600" : "text-red-600"}>
+                PnL: {t.pnl.toFixed(4)}
+              </div>
+              <div className="break-all">Addr: {formatAddress(t.address)}</div>
             </div>
-            <div className="flex flex-col gap-1 text-sm">
-              <span className="font-medium">{t.asset}</span>
-              <span className="text-gray-500">Price {t.exit_price}</span>
-              <span className="text-gray-500">Size {t.amount}</span>
-              <span className={t.pnl >= 0 ? "text-green-600" : "text-red-600"}>
-                PnL {t.pnl.toFixed(4)}
-              </span>
-            </div>
-          </div>
+          </details>
         ))}
       </div>
       {snapshots.length > 0 && (

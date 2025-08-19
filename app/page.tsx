@@ -48,6 +48,13 @@ const projects: Project[] = [
     status: "live",
     updatedAt: "2024-07-22",
   },
+  {
+    title: "Letta Agent",
+    href: "/letta-agent",
+    tags: ["chat", "agent"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
 ];
 
 const allTags = ["All", ...Array.from(new Set(projects.flatMap((p) => p.tags)))];
