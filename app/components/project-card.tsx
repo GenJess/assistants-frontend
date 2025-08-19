@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { GlowCard } from "./glow-card";
 
 type ProjectCardProps = {
   title: string;
@@ -20,7 +19,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   updatedAt,
   dataHref,
 }) => (
-  <GlowCard className="cursor-pointer" glowColor="purple" customSize>
+  <div className="cursor-pointer rounded border p-4">
     <a
       href={href}
       className="flex flex-col focus:outline-none"
@@ -50,7 +49,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
         View Data
       </button>
     )}
-  </GlowCard>
+  </div>
 );
 
 export default ProjectCard;
