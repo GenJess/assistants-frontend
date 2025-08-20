@@ -1,20 +1,17 @@
-import LettaChat from "./letta-chat";
+import ChatInterface from "./chat-interface";
 
 const LettaAgentPage = () => {
-  const apiKey = process.env.LETTA_API_KEY;
-  const agentId = process.env.LETTA_AGENT_ID;
-  if (!apiKey || !agentId) {
-    return (
-      <main className="mx-auto max-w-2xl p-4">
-        <h1 className="mb-4 text-2xl font-bold">Letta Agent</h1>
-        <p className="text-red-600">Missing LETTA_API_KEY or LETTA_AGENT_ID.</p>
-      </main>
-    );
-  }
   return (
-    <main className="mx-auto max-w-2xl p-4">
-      <h1 className="mb-4 text-2xl font-bold">Letta Agent</h1>
-      <LettaChat />
+    <main className="mx-auto max-w-4xl p-4 space-y-8">
+      <h1 className="mb-4 text-2xl font-bold">Letta Agents</h1>
+      <section>
+        <h2 className="mb-2 text-xl font-semibold">AOC</h2>
+        <ChatInterface agent="aoc" />
+      </section>
+      <section className="pt-8">
+        <h2 className="mb-2 text-xl font-semibold">ANNA</h2>
+        <ChatInterface agent="anna" />
+      </section>
     </main>
   );
 };
