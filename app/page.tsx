@@ -50,7 +50,7 @@ const projects: Project[] = [
   },
   {
     title: "Letta Agent",
-    href: "/letta-agent",
+    href: "/letta",
     tags: ["chat", "agent"],
     status: "live",
     updatedAt: "2024-07-22",
