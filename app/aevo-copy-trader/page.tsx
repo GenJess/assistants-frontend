@@ -21,16 +21,12 @@ const AevoCopyTraderPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [snapshots, setSnapshots] = useState<string[]>([]);
-  const [save, setSave] = useState<boolean>(() => {
-    if (typeof window === "undefined") return true;
-    return localStorage.getItem("aevo-save") !== "0";
-  });
 
   useEffect(() => {
     const fetchTrades = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/aevo-copy-trader?save=${save ? "1" : "0"}`);
+        const res = await fetch(`/api/aevo-copy-trader`);
         console.log("API Response Status:", res.status);
         const data = await res.json();
         console.log("API Response Data:", data);
@@ -55,7 +51,7 @@ const AevoCopyTraderPage = () => {
     fetchTrades();
     const id = setInterval(fetchTrades, 5000);
     return () => clearInterval(id);
-  }, [save]);
+  }, []);
 
   useEffect(() => {
     const fetchSnapshots = async () => {
@@ -77,7 +73,7 @@ const AevoCopyTraderPage = () => {
 
   if (loading) {
     return (
-      <main className="mx-auto max-w-2xl p-4">
+      <main className="container mx-auto max-w-2xl p-4">
         <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
         <p className="text-sm text-gray-500">Loading trades...</p>
       </main>
@@ -86,7 +82,7 @@ const AevoCopyTraderPage = () => {
 
   if (error) {
     return (
-      <main className="mx-auto max-w-2xl p-4">
+      <main className="container mx-auto max-w-2xl p-4">
         <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
         <p className="text-sm text-red-600">Error: {error}</p>
       </main>
@@ -95,7 +91,7 @@ const AevoCopyTraderPage = () => {
 
   if (!trades.length) {
     return (
-      <main className="mx-auto max-w-3xl p-4">
+      <main className="container mx-auto max-w-3xl p-4">
         <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
         <p className="text-sm text-gray-500">No trades available</p>
       </main>
@@ -103,22 +99,8 @@ const AevoCopyTraderPage = () => {
   }
 
   return (
-    <main className="mx-auto max-w-3xl p-4">
+    <main className="container mx-auto max-w-3xl p-4">
       <h1 className="mb-4 text-2xl font-bold">Aevo Copy Trader Feed</h1>
-      <label className="mb-4 flex items-center gap-2 text-sm">
-        <input
-          type="checkbox"
-          checked={save}
-          onChange={(e) => {
-            const val = e.target.checked;
-            setSave(val);
-            if (typeof window !== "undefined") {
-              localStorage.setItem("aevo-save", val ? "1" : "0");
-            }
-          }}
-        />
-        Save hourly snapshot
-      </label>
       <div className="hidden sm:block overflow-x-auto">
         <table className="min-w-full border text-sm">
           <thead className="sticky top-0 bg-white">

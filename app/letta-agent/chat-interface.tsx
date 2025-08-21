@@ -8,20 +8,21 @@ import { cn } from "@/lib/utils";
 
 export type Message = { role: "agent" | "user"; content: string };
 
-export default function ChatInterface({ agent }: { agent: string }) {
+export default function ChatInterface({ agentId }: { agentId: string }) {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
 
   const send = async () => {
     if (!input.trim()) return;
     const userMsg: Message = { role: "user", content: input };
-    setMessages((m) => [...m, userMsg]);
+    const newMessages = [...messages, userMsg];
+    setMessages(newMessages);
     setInput("");
     try {
-      const res = await fetch(`/api/letta-agent/${agent}`, {
+      const res = await fetch(`/api/letta-agent/${agentId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg.content }),
+        body: JSON.stringify({ messages: newMessages }),
       });
       const data = await res.json();
       const reply =
@@ -57,14 +58,14 @@ export default function ChatInterface({ agent }: { agent: string }) {
         </div>
       </ScrollArea>
       <div className="p-4 border-t">
-        <div className="flex gap-2">
+        <div className="flex flex-col sm:flex-row gap-2">
           <Textarea
             placeholder="Type a message"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             className="min-h-[44px] max-h-32"
           />
-          <Button onClick={send} className="px-8">
+          <Button onClick={send} className="px-8 w-full sm:w-auto">
             Send
           </Button>
         </div>
