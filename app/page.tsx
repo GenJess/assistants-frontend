@@ -70,7 +70,7 @@ const Home = () => {
   });
 
   return (
-    <main className="mx-auto max-w-6xl p-4">
+    <main className="container mx-auto p-4">
       <h1 className="mb-6 text-center text-3xl font-bold">Project Dashboard</h1>
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
         <input

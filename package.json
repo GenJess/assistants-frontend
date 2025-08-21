@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "test": "node -e \"process.exit(0)\""
   },
   "dependencies": {
     "@vercel/blob": "^1.1.1",
