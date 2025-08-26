@@ -55,6 +55,13 @@ const projects: Project[] = [
     status: "live",
     updatedAt: "2024-07-22",
   },
+  {
+    title: "Options Chain Explorer",
+    href: "/options",
+    tags: ["finance", "options"],
+    status: "live",
+    updatedAt: "2024-07-22",
+  },
 ];
 
 const allTags = ["All", ...Array.from(new Set(projects.flatMap((p) => p.tags)))];
