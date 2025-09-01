@@ -38,7 +38,19 @@ export async function POST(
         },
       ],
     });
-    return NextResponse.json(response);
+    const firstMessage = response.messages?.[0];
+    let firstText = "";
+    if (
+      firstMessage &&
+      "content" in firstMessage &&
+      Array.isArray(firstMessage.content)
+    ) {
+      const firstBlock = firstMessage.content[0];
+      if (firstBlock && "text" in firstBlock && typeof firstBlock.text === "string") {
+        firstText = firstBlock.text;
+      }
+    }
+    return NextResponse.json({ ...response, message: firstText });
   } catch (err) {
     console.error("Letta API error:", err);
     return NextResponse.json(
