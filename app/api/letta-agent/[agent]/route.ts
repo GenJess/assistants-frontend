@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { LettaClient } from "@letta-ai/letta-client";
+import { LETTA_API_KEY } from "@/lib/env";
 
-const apiKey = process.env.LETTA_API_KEY;
+const apiKey = LETTA_API_KEY;
 
 export const dynamic = "force-dynamic";
 

@@ -27,6 +27,7 @@ export OPENAI_API_KEY="sk_..."
 ```shell
 npm install
 ```
+Install all dependencies so packages like [`jszip`](https://www.npmjs.com/package/jszip) are available for features such as the Zip to Text Extractor.
 
 ### 4. Run
 
