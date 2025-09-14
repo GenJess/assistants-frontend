@@ -19,7 +19,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({
   updatedAt,
   dataHref,
 }) => (
-  <div className="cursor-pointer rounded border p-4">
+  <div className="p-4">
     <a
       href={href}
       className="flex flex-col focus:outline-none"
