@@ -55,6 +55,13 @@ const projects: Project[] = [
     status: "live",
     updatedAt: "2024-07-22",
   },
+  {
+    title: "Zip to Text Extractor",
+    href: "/zip-to-text-extractor",
+    tags: ["tool"],
+    status: "live",
+    updatedAt: "2025-09-14",
+  },
 ];
 
 const allTags = ["All", ...Array.from(new Set(projects.flatMap((p) => p.tags)))];
