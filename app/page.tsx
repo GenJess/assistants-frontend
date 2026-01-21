@@ -62,6 +62,13 @@ const projects: Project[] = [
     status: "live",
     updatedAt: "2025-09-14",
   },
+  {
+    title: "Knowledge Repo",
+    href: "/knowledge-repo",
+    tags: ["knowledge", "research"],
+    status: "draft",
+    updatedAt: "2025-09-14",
+  },
 ];
 
 const allTags = ["All", ...Array.from(new Set(projects.flatMap((p) => p.tags)))];
@@ -77,33 +84,48 @@ const Home = () => {
   });
 
   return (
-    <main className="mx-auto max-w-6xl p-4">
-      <h1 className="mb-6 text-center text-3xl font-bold">Project Dashboard</h1>
-      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Search projects..."
-          className="w-full rounded border px-3 py-2"
-        />
-        <select
-          value={tag}
-          onChange={(e) => setTag(e.target.value)}
-          className="rounded border px-3 py-2"
-        >
-          {allTags.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <main className="mx-auto flex w-full max-w-6xl flex-1 flex-col gap-10 px-4 py-10">
+      <section className="rounded-3xl border border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-transparent p-8 shadow-[0_24px_80px_-50px_rgba(15,23,42,0.8)]">
+        <p className="text-xs uppercase tracking-[0.4em] text-emerald-300">
+          Assistants workspace
+        </p>
+        <h1 className="mt-3 text-3xl font-semibold text-white sm:text-4xl">
+          Build, monitor, and evolve your assistant ecosystem.
+        </h1>
+        <p className="mt-3 max-w-2xl text-sm text-slate-300 sm:text-base">
+          A modern, mobile-ready dashboard that keeps projects, research, and
+          agents aligned. Filter by capability, drill into details, and add new
+          knowledge in a consistent UI flow.
+        </p>
+        <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <label className="w-full">
+            <span className="sr-only">Search projects</span>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search projects..."
+              className="w-full rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white placeholder:text-slate-400 outline-none transition focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20"
+            />
+          </label>
+          <select
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            className="rounded-full border border-white/10 bg-white/10 px-4 py-2 text-sm text-white outline-none transition focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20"
+          >
+            {allTags.map((t) => (
+              <option key={t} value={t} className="text-slate-900">
+                {t}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+      <section className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filtered.map((item) => (
           <ProjectCard key={item.title} {...item} />
         ))}
-      </div>
+      </section>
     </main>
   );
 };

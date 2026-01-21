@@ -8,6 +8,7 @@
   --font-mono: ui-monospace, Menlo, Monaco, "Cascadia Mono", "Segoe UI Mono",
     "Roboto Mono", "Oxygen Mono", "Ubuntu Monospace", "Source Code Pro",
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
+  color-scheme: dark;
 }
 
 * {
@@ -24,20 +25,20 @@ body {
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: radial-gradient(circle at top, #1b2440 0%, #0b0f1a 45%);
 }
 
 main {
   flex: 1;
   display: flex;
   flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 a {
-  color: inherit;
   text-decoration: none;
 }
 
@@ -74,14 +75,17 @@ ol {
   padding-left: 20px;
 }
 
-a {
-  color: blue;
-}
-
 pre {
   margin: -4px -16px;
   padding: 20px;
   white-space: pre-wrap;
   background-color: #e4e4e4;
   color: black;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
 }
